@@ -3,10 +3,10 @@
 \KOMAoptions{
   parskip=half,
   headings=small,
-  DIV=16,
   headinclude=true,
   footinclude=true
 }
+\areaset{175mm}{270mm}
 
 \usepackage{labstyle}
 
@@ -26,17 +26,17 @@
 % ------------------------------------------
 \usepackage{csquotes}
 
-% ------------------------------------------
-% Abstract: no side indent, no paragraph indent
-% ------------------------------------------
-\makeatletter
-\renewenvironment{abstract}{%
-  \small
-  \parindent=0pt%
-  \begin{center}\bfseries\abstractname\end{center}%
-  \ignorespaces
-}{\par}
-\makeatother
+% % ------------------------------------------
+% % Abstract: no side indent, no paragraph indent
+% % ------------------------------------------
+% \makeatletter
+% \renewenvironment{abstract}{%
+%   \small
+%   \parindent=0pt%
+%   \begin{center}\bfseries\abstractname\end{center}%
+%   \ignorespaces
+% }{\par}
+% \makeatother
 
 % ------------------------------------------
 % Custom Units
@@ -47,9 +47,9 @@
 % ------------------------------------------
 % Metadata
 % ------------------------------------------
-\renewcommand{\labtitle}{Praktikum I — Cuboid: Regelung eines EC-Motors}
-\renewcommand{\labsubtitle}{Laborbeschreibung}
-\renewcommand{\labauthor}{Ihr Name / Institut}
+\renewcommand{\labtitle}{Praktikum I}
+\renewcommand{\labsubtitle}{Cuboid: Regelung eines EC-Motors}
+\renewcommand{\labauthor}{RT1}
 \renewcommand{\labdate}{\today}
 
 \begin{document}
@@ -59,6 +59,9 @@
     Dieses Praktikum behandelt die Regelung des Antriebsmotors des \emph{Cuboid}.
     Die Vorlage ist bewusst schlank: klare Typografie, wenige Abhängigkeiten, konsistente Einheiten (\texttt{siunitx}).
 \end{abstract}
+
+Dieses Praktikum behandelt die Regelung des Antriebsmotors des \emph{Cuboid}.
+Die Vorlage ist bewusst schlank: klare Typografie, wenige Abhängigkeiten, konsistente Einheiten (\texttt{siunitx}).
 
 \section{Einleitung}
 Der vorliegende Antrieb besteht aus einem Maxon EC90 Motor mit Maximalstrom \qty{15}{A} und
@@ -136,8 +139,8 @@ Die Lösung eines exponentiellen Ansatzes:
 
 \subsection*{Links und Farben}
 Weitere Infos unter
-\href{https://www.maxongroup.com/}{\color{labBlue}Maxon Motor AG}.
-Beachten Sie die Farbdefinition \texttt{labBlue} aus \texttt{labstyle.sty}.
+\href{https://www.maxongroup.com/}{\color{labColor}Maxon Motor AG}.
+Beachten Sie die Farbdefinition \texttt{labColor} aus \texttt{labstyle.sty}.
 
 \section{Drehzahlregelung}
 Wir verwenden einen PI-Regler, Ziel: ausreichende Phasenreserve und keine Überschreitung von \qty{15}{A}.
@@ -154,5 +157,13 @@ Wir verwenden einen PI-Regler, Ziel: ausreichende Phasenreserve und keine Übers
     \item Für Einheiten und Werte stets \verb|\qty| und \verb|\si| aus \texttt{siunitx} verwenden.
     \item Kompilieren Sie mit \texttt{lualatex} oder \texttt{pdflatex}.
 \end{itemize}
+
+\begin{answerbox}[3]\end{answerbox}
+
+\begin{answerbox}[6]\end{answerbox}
+
+\begin{answerboxruled}[5]\end{answerboxruled}
+
+\begin{answerboxruled}[8]\end{answerboxruled}
 
 \end{document}

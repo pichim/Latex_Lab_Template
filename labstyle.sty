@@ -35,7 +35,7 @@
 \RequirePackage{amsmath,amssymb}
 \RequirePackage{booktabs}
 \RequirePackage{enumitem}
-\setlist{itemsep=.3\baselineskip, topsep=.3\baselineskip, leftmargin=*}
+\setlist{itemsep=.1\baselineskip, topsep=.1\baselineskip, leftmargin=*}
 
 \RequirePackage{hyperref}
 \hypersetup{colorlinks=true, linkcolor=NavyBlue, citecolor=RoyalBlue, urlcolor=RoyalBlue}
@@ -47,7 +47,8 @@
 % Paths / colors
 % -----------------------------------------------------------------------------
 \graphicspath{{figures/}{Figures/}}
-\definecolor{labBlue}{RGB}{0,100,166}
+\definecolor{labColor}{RGB}{0,100,166}
+% \definecolor{labColor}{RGB}{0,0,0}
 
 % -----------------------------------------------------------------------------
 % Metadata (override in main .tex)
@@ -65,9 +66,9 @@
     \par\vspace*{1em}%
     {\LARGE\bfseries \labtitle\par}%
     \ifdefempty{\labsubtitle}{}{%
-        {\large\color{labBlue}\labsubtitle\par}%
+        {\large\color{labColor}\labsubtitle\par}%
     }%
-    {\normalsize \labauthor\quad\textbullet\quad \labdate\par}%
+    {\normalsize \labauthor\quad\textendash\quad \labdate\par}
     \vspace{1em}\par
 }
 \makeatother
@@ -77,9 +78,9 @@
 % -----------------------------------------------------------------------------
 \newenvironment{aufgaben}[1][Aufgaben]{%
     \par\smallskip
-    \begingroup\color{labBlue}%
+    \begingroup\color{labColor}%
     \noindent\textbf{#1}\par\smallskip
-    \begin{enumerate}[leftmargin=*, itemsep=.35\baselineskip, topsep=.35\baselineskip]
+    \begin{enumerate}[leftmargin=*]
         }{%
     \end{enumerate}%
     \endgroup
@@ -122,7 +123,9 @@
     footsepline=false
 }
 
+% -----------------------------------------------------------------------------
 % User metadata for header/footer
+% -----------------------------------------------------------------------------
 \newcommand{\labheader}{RT I}         % top-left text
 \newcommand{\labfooter}{ZHAW/IMS}     % bottom-left text
 \newcommand{\lablogo}{imslogo.pdf}    % small image filename for top-right (optional)
@@ -137,3 +140,52 @@
 \ifoot{\small \labfooter}
 \ofoot{\pagemark}
 \makeatother
+
+% -----------------------------------------------------------------------------
+% Answer boxes (vertically scaled)
+% -----------------------------------------------------------------------------
+\RequirePackage[most]{tcolorbox} % loads TikZ
+\usetikzlibrary{calc}            % needed for coordinate math
+
+\tcbset{
+    labbox/.style={
+            colframe=labColor,
+            colback=white,
+            boxrule=0.8pt,
+            arc=2pt,
+            left=6pt,right=6pt,top=4pt,bottom=4pt,
+        }
+}
+
+% Scale factor: 1.2 × baseline (change 7/5 to adjust)
+\newlength{\labrowskip}
+\setlength{\labrowskip}{\dimexpr 7\baselineskip/5\relax} % 1.2 × \baselineskip
+
+% Fixed-height empty box (N lines tall with scaled line height)
+\newenvironment{answerbox}[1][3]{%
+    \begin{tcolorbox}[
+            labbox, enhanced,
+            width=\linewidth,
+            height=\dimexpr #1\labrowskip + 8pt\relax, % + top/bottom padding (4pt each)
+            valign=center
+        ]%
+        }{\end{tcolorbox}}
+
+% Ruled variant: N lines of writing space → draw N−1 guides, centered in rows
+\newenvironment{answerboxruled}[1][3]{%
+    \begin{tcolorbox}[
+            labbox, enhanced,
+            width=\linewidth,
+            height=\dimexpr #1\labrowskip + 8pt\relax,
+            overlay={%
+                    \pgfmathtruncatemacro{\N}{#1-1}%
+                    \foreach \i in {1,...,\N} {%
+                            % y = (i - 0.5) * \labrowskip  (center of each row; even top/bottom margins)
+                            \pgfmathsetlengthmacro{\y}{(\i + 0.25) * \the\labrowskip}%
+                            \draw[opacity=0.25]
+                            ($(interior.south west) + (0pt,\y)$) --
+                            ($(interior.south east) + (0pt,\y)$);
+                        }%
+                }
+        ]%
+        }{\end{tcolorbox}}
