@@ -1,0 +1,139 @@
+% labstyle.sty — minimal+modern lab style (v1.5)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{labstyle}[2025/09/17 v1.5 Minimal lab template]
+
+% -----------------------------------------------------------------------------
+% Engine + fonts
+% -----------------------------------------------------------------------------
+\RequirePackage{iftex}
+\ifPDFTeX
+    \RequirePackage[T1]{fontenc}
+    \RequirePackage[utf8]{inputenc}
+    \RequirePackage{lmodern}
+\else
+    \RequirePackage{fontspec}
+    \setmainfont{TeX Gyre Pagella}
+    \setsansfont{TeX Gyre Heros}
+    \IfFontExistsTF{JetBrains Mono}
+    {\setmonofont{JetBrains Mono}}
+    {\setmonofont{TeX Gyre Cursor}}
+\fi
+
+% -----------------------------------------------------------------------------
+% Core packages
+% -----------------------------------------------------------------------------
+\RequirePackage{microtype}
+\RequirePackage{graphicx}
+\RequirePackage[dvipsnames]{xcolor}
+
+\RequirePackage{siunitx}
+\sisetup{
+    per-mode = symbol,
+    range-units = single
+}
+
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{booktabs}
+\RequirePackage{enumitem}
+\setlist{itemsep=.3\baselineskip, topsep=.3\baselineskip, leftmargin=*}
+
+\RequirePackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=NavyBlue, citecolor=RoyalBlue, urlcolor=RoyalBlue}
+\urlstyle{same}
+\RequirePackage[nameinlink,capitalise]{cleveref}
+\RequirePackage{etoolbox} % for \ifdefempty
+
+% -----------------------------------------------------------------------------
+% Paths / colors
+% -----------------------------------------------------------------------------
+\graphicspath{{figures/}{Figures/}}
+\definecolor{labBlue}{RGB}{0,100,166}
+
+% -----------------------------------------------------------------------------
+% Metadata (override in main .tex)
+% -----------------------------------------------------------------------------
+\newcommand{\labtitle}{}
+\newcommand{\labsubtitle}{}
+\newcommand{\labauthor}{}
+\newcommand{\labdate}{\today}
+
+% -----------------------------------------------------------------------------
+% Title block
+% -----------------------------------------------------------------------------
+\makeatletter
+\newcommand{\makelabtitle}{%
+    \par\vspace*{1em}%
+    {\LARGE\bfseries \labtitle\par}%
+    \ifdefempty{\labsubtitle}{}{%
+        {\large\color{labBlue}\labsubtitle\par}%
+    }%
+    {\normalsize \labauthor\quad\textbullet\quad \labdate\par}%
+    \vspace{1em}\par
+}
+\makeatother
+
+% -----------------------------------------------------------------------------
+% Aufgaben environment
+% -----------------------------------------------------------------------------
+\newenvironment{aufgaben}[1][Aufgaben]{%
+    \par\smallskip
+    \begingroup\color{labBlue}%
+    \noindent\textbf{#1}\par\smallskip
+    \begin{enumerate}[leftmargin=*, itemsep=.35\baselineskip, topsep=.35\baselineskip]
+        }{%
+    \end{enumerate}%
+    \endgroup
+    \par\smallskip
+}
+
+% -----------------------------------------------------------------------------
+% Helpers
+% -----------------------------------------------------------------------------
+\makeatletter
+\newcommand{\labfig}[3][]{%
+    \filename@parse{#2}% sets \filename@base
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[#1]{#2}%
+        \caption{#3}\label{fig:\filename@base}%
+    \end{figure}
+}
+\makeatother
+
+\newenvironment{gentable}[2]{%
+    \begin{table}[htbp]\centering
+        \caption{#2}
+        \begin{tabular}{#1}\toprule
+            }{\bottomrule\end{tabular}\end{table}}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\e}{\mathrm{e}}
+
+% -----------------------------------------------------------------------------
+% Page style: thin rules + header/footer text & logo
+% -----------------------------------------------------------------------------
+\RequirePackage{scrlayer-scrpage}
+\clearpairofpagestyles
+\pagestyle{scrheadings}
+\setkomafont{pageheadfoot}{\normalfont}
+
+\KOMAoptions{
+    headsepline=.2pt:\textwidth,
+    footsepline=false
+}
+
+% User metadata for header/footer
+\newcommand{\labheader}{RT I}         % top-left text
+\newcommand{\labfooter}{ZHAW/IMS}     % bottom-left text
+\newcommand{\lablogo}{imslogo.pdf}    % small image filename for top-right (optional)
+
+\makeatletter
+\ihead{\small \labheader}
+\ohead{%
+    \ifdefempty{\lablogo}{}{%
+        \IfFileExists{\lablogo}{\includegraphics[height=30pt]{\lablogo}}{}%
+    }%
+}
+\ifoot{\small \labfooter}
+\ofoot{\pagemark}
+\makeatother
