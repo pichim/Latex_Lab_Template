@@ -101,11 +101,19 @@
 }
 \makeatother
 
+% --- gentable: caption below the table (store #2, then use it at the end)
+\makeatletter
+\newcommand{\gentable@cap}{}% storage for caption text
 \newenvironment{gentable}[2]{%
+    \def\gentable@cap{#2}%
     \begin{table}[htbp]\centering
-        \caption{#2}
         \begin{tabular}{#1}\toprule
-            }{\bottomrule\end{tabular}\end{table}}
+            }{%
+            \bottomrule\end{tabular}%
+        \caption{\gentable@cap}%
+    \end{table}%
+}
+\makeatother
 
 \newcommand{\dd}{\mathrm{d}}
 \newcommand{\e}{\mathrm{e}}
@@ -120,7 +128,9 @@
 
 \KOMAoptions{
     headsepline=.2pt:\textwidth,
-    footsepline=false
+    footsepline=false,
+    headinclude=true,     % include header in typearea calc
+    headheight=36pt       % ≥ 34.08pt as per warning; round up
 }
 
 % -----------------------------------------------------------------------------
@@ -160,6 +170,7 @@
 % Scale factor: 1.2 × baseline (change 7/5 to adjust)
 \newlength{\labrowskip}
 \setlength{\labrowskip}{\dimexpr 7\baselineskip/5\relax} % 1.2 × \baselineskip
+% \setlength{\labrowskip}{\dimexpr 1\baselineskip/1\relax} % 1.0 × \baselineskip
 
 % Fixed-height empty box (N lines tall with scaled line height)
 \newenvironment{answerbox}[1][3]{%
@@ -189,3 +200,40 @@
                 }
         ]%
         }{\end{tcolorbox}}
+
+% Auto-height: fill to end of page, matching answerbox scaling
+\makeatletter
+\newlength{\ab@h}      % remaining vertical space
+\newlength{\ab@tmp}    % scratch
+\newcount\ab@N         % rows that fit
+\newcommand*\ab@pad{8pt}% tcolorbox top+bottom padding (4pt each)
+
+\newenvironment{answerboxfillpage}{%
+    \par\begingroup
+    \ifhmode\par\fi
+    % Remaining height; at top-of-page \pagegoal=\maxdimen → use \textheight
+    \setlength{\ab@h}{%
+        \ifdim\pagegoal=\maxdimen \textheight\else \dimexpr\pagegoal-\pagetotal\relax\fi
+    }%
+    % Headroom: keep small; tweak 0pt … \baselineskip if you like
+    \addtolength{\ab@h}{-\baselineskip}%
+    % Snap: rows fit in (remaining - padding), then add padding back
+    \setlength{\ab@tmp}{\dimexpr \ab@h - \ab@pad\relax}%
+    \ifdim\ab@tmp<0pt \setlength{\ab@tmp}{0pt}\fi
+    \ab@N=0\relax
+    \loop\ifdim\ab@tmp>\labrowskip
+    \addtolength{\ab@tmp}{-\labrowskip}%
+    \advance\ab@N by 1\relax
+    \repeat
+    % Optional 'ceil' if the leftover is big enough to risk visible gap:
+    \ifdim\ab@tmp>.6\labrowskip \advance\ab@N by 1\relax\fi
+    % Enforce a small minimum
+    \ifnum\ab@N<3 \ab@N=3\fi
+    % Final box height = rows*rowheight + padding
+    \setlength{\ab@h}{\dimexpr \ab@N\labrowskip + \ab@pad\relax}%
+    \begin{tcolorbox}[labbox, enhanced,
+            width=\linewidth, height=\ab@h, valign=top]%
+        }{%
+    \end{tcolorbox}\endgroup
+}
+\makeatother
