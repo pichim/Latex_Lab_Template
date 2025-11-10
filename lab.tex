@@ -59,10 +59,10 @@ Aufbauend auf der bestehenden Geschwindigkeitsregelung des DC-Motors wird in die
 
 \textbf{Lernziele}
 \begin{itemize}
-    \item Linearisierung eines nichtlinearen mechanischen Systems um gegebene Arbeitspunkte.
-    \item Herleitung und Interpretation von Übertragungsfunktionen.
-    \item Entwurf eines PI-Reglers mithilfe der Wurzelortskurve (Root Locus).
-    \item Umsetzung und Test der Regelung am realen System inkl.\ Enable/Reset-Logik.
+    \item Linearisierung eines nichtlinearen mechanischen Systems um gegebene Arbeitspunkte
+    \item Herleitung und Interpretation von Übertragungsfunktionen
+    \item Entwurf eines PI-Reglers mithilfe der Wurzelortskurve (Root Locus)
+    \item Umsetzung und Test der Regelung am realen System inkl.\ Enable/Reset-Logik
 \end{itemize}
 
 \section{Differentialgleichung}
@@ -100,7 +100,7 @@ Um konsistent mit den vergangenen Praktika zu sein, verwenden wir weiterführend
     \textbf{Grösse} & \textbf{Wert} \\
     \midrule
     Armlänge des Motors $L_1$ & $\qty{0.0855}{\metre}$ \\
-    Trägheitsmoment des Pendels $J_p$ & $\qty{6.063e-5}{\kilogram\metre\squared}$ \\
+    Massenträgheitsmoment des Pendels bez. COG $J_p$ & $\qty{6.063e-5}{\kilogram\metre\squared}$ \\
     Masse des Pendels $m_2$ & $\qty{0.028}{\kilogram}$ \\
     Abstand zum Schwerpunkt $l_2$ & $\qty{0.0805}{\metre}$ \\
     Reibungskoeffizient $b_2$ & $\qty{4.4e-5}{\newton\metre\per\radian\per\second}$\\
@@ -109,14 +109,14 @@ Um konsistent mit den vergangenen Praktika zu sein, verwenden wir weiterführend
 
 \begin{aufgaben}
     \item Skizzieren Sie die angreifenden Kräfte und Momente am Pendel.
-    \item Welche Grösse bestimmt den Systemeingang und welche den Systemausgang?
+    \item Welche Grösse ist der Systemeingang und welche der Systemausgang?
 \end{aufgaben}
 
 \begin{answerboxfillpage}\end{answerboxfillpage}
 
 \section{Pendel hängend}
 
-Im ersten Teil wird das Pendel in seiner stabilen Gleichgewichtslage, also \emph{hängend}, untersucht. Ziel ist es, das Systemverhalten um diesen Arbeitspunkt zu analysieren und einen geeigneten Regler entwerfen zu können. Dazu wird die nichtlineare Differentialgleichung zunächst linearisiert und in eine Übertragungsfunktion überführt. Anschliessend erfolgt die Bewertung der Stabilität und des statischen Verhaltens, bevor im nächsten Schritt, auf Basis des Wurzelortskurvenverfahrens, der Regler ausgelegt wird.
+Im ersten Teil wird das Pendel in seiner grenzstabilen Gleichgewichtslage (wir Vernachlässigen die Reibung), also \emph{hängend}, untersucht. Ziel ist es, das Systemverhalten um diesen Arbeitspunkt zu analysieren und einen geeigneten Regler entwerfen zu können. Dazu wird die nichtlineare Differentialgleichung zunächst linearisiert und in eine Übertragungsfunktion überführt. Anschliessend erfolgt die Bewertung der Stabilität und des statischen Verhaltens, bevor im nächsten Schritt, auf Basis des Wurzelortskurvenverfahrens, der Regler ausgelegt wird.
 
 \subsection*{Systemanalyse}
 
@@ -200,7 +200,7 @@ Nun soll der zu entwerfende Regler das stehende Pendel stabilisieren. Ziel ist e
         \item Bestimmen Sie die Kandidaten der Verzweigungspunkte (Abzweig- und Zusammenflusspunkte, engl. \emph{breakaway} und \emph{break-in points}). Entscheiden Sie, welche der Kandidaten tatsächlich Verzweigungspunkte sind, und tragen Sie diese in die Skizze ein.
         \item Vervollständigen Sie die Skizze der Wurzelortskurve.
         \item Bestimmen Sie anhand des Amplitudenkriteriums (engl. \emph{magnitude condition}) die Verstärkung $k$. Anhand der Wurzelortskurve ist ersichtlich, dass wir zwei Möglichkeiten zur Parametrierung einer doppelten Polstelle des geschlossenen Regelkreises haben. Bestimmen Sie beide Verstärkungen und anschliessend die zugehörigen Reglerverstärkungen $k_p$.
-        \item Überlegen Sie sich nun, wie die Verstärkung $k$ so gewählt werden kann, dass wir ein System auslegen, bei dem ein Pol am höchsten Punkt der Wurzelortskurve und ein Pol am tiefsten Punkt der Wurzelortskurve zu liegen kommt. Bestimmen Sie anschliessend die zugehörige Reglerverstärkung $k_p$ und implementieren Sie diesen Regler.
+        \item Überlegen Sie sich nun, wie die Verstärkung $k$ gewählt werden kann, sodass wir ein System auslegen, bei dem ein Pol am höchsten Punkt der Wurzelortskurve und ein Pol am tiefsten Punkt der Wurzelortskurve zu liegen kommt. Bestimmen Sie anschliessend die zugehörige Reglerverstärkung $k_p$ und implementieren Sie diesen Regler.
     \end{enumerate}
 \end{aufgaben}
 
