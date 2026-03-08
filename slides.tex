@@ -1,0 +1,97 @@
+\documentclass[9pt]{beamer}
+
+\usepackage{labslides}
+\usepackage[ngerman]{babel}
+\usepackage{csquotes}
+\usepackage{amsmath}
+\renewcommand{\lablogo}{imslogo.pdf}
+
+\title[Praktikum V]{Praktikum V: Drehpendel}
+\subtitle{Reglerentwurf mit Root Locus}
+\author[RT I Team]{Gruppe fuer Regelungstechnik}
+\institute[ZHAW/IMS]{ZHAW \& IMS}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+    \tableofcontents
+\end{frame}
+
+\section{Motivation}
+\labsectionframe
+
+\begin{frame}{Lernziele}
+    \begin{itemize}
+        \item Linearisierung des Drehpendels um unterschiedliche Arbeitspunkte
+        \item Aufbau einer Uebertragungsfunktion von $\omega_1(s)$ nach $\varphi_2(s)$
+        \item PI-Reglerentwurf mit dem Wurzelortskurvenverfahren
+        \item Umsetzung im Simulink-Template mit Enable/Reset-Logik
+    \end{itemize}
+\end{frame}
+
+\section{Modell}
+\labsectionframe
+
+\begin{frame}{Linearisierte Bewegungsgleichung}
+    Unter Vernachlaessigung der Corioliskraefte:
+    \[
+        \left(J_p + m_2 l_2^2\right)\ddot{\varphi}_2 + b_2\dot{\varphi}_2 + m_2 g l_2\sin\varphi_2
+        = -m_2 L_1 l_2\cos\varphi_2\,\ddot{\varphi}_1
+    \]
+    Nahe des haengenden Arbeitspunktes gilt:\quad
+    $\sin\varphi_2 \approx \varphi_2$,\; $\cos\varphi_2 \approx 1$.
+\end{frame}
+
+\begin{frame}{Parameteruebersicht}
+    \begin{block}{Drehpendel-Parameter}
+        \begin{tabular}{ll}
+            \toprule
+            Groesse & Wert \\
+            \midrule
+            $L_1$ & \qty{0.0855}{\metre} \\
+            $m_2$ & \qty{0.028}{\kilogram} \\
+            $l_2$ & \qty{0.0805}{\metre} \\
+            $g$ & \qty{9.81}{\metre\per\second\squared} \\
+            \bottomrule
+        \end{tabular}
+    \end{block}
+\end{frame}
+
+\section{Ergebnis}
+\labsectionframe
+
+\begin{frame}{Reglerstruktur}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.58\textwidth}
+            \begin{itemize}
+                \item PI-Regler: \(C(s) = k_p\left(\frac{T_i s + 1}{T_i s}\right)\)
+                \item Nullstelle wird vorgegeben, danach wird $k_p$ ueber Root Locus bestimmt
+                \item Vorzeichen der Strecke im Modell und in Simulink konsistent setzen
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.40\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{rot_pen_paper_snapshot.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Takeaways}
+    \begin{enumerate}
+        \item Haengendes Pendel: grenzstabil, Daempfung durch PI-Regler verbessern.
+        \item Stehendes Pendel: instabil, Pol in die linke Halbebene verschieben.
+        \item Saubere Enable/Reset-Logik ist fuer den Praxistest entscheidend.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[plain]
+    \centering
+    \Huge Fragen?
+\end{frame}
+
+\end{document}

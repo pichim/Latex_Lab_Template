@@ -1,0 +1,4 @@
+\babel@toc {ngerman}{}\relax 
+\beamer@sectionintoc {1}{Motivation}{3}{0}{1}
+\beamer@sectionintoc {2}{Modell}{5}{0}{2}
+\beamer@sectionintoc {3}{Ergebnis}{8}{0}{3}

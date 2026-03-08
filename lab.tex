@@ -6,7 +6,10 @@
   headinclude=true,
   footinclude=true
 }
-\areaset{175mm}{270mm}
+\areaset{175mm}{290mm}
+% Shift the whole layout block (header + text + footer) down on the paper.
+% Positive value moves everything down; reduce if bottom margin gets too small.
+\addtolength{\topmargin}{0mm}
 
 \usepackage{labstyle}
 
@@ -48,7 +51,7 @@
 % Metadata
 % ------------------------------------------
 \renewcommand{\labtitle}{Praktikum V}
-\renewcommand{\labsubtitle}{Drehpendel: Reglerentwurf hängendes und stehendes Pendel mit Hilfe der Wurzelortskurve}
+\renewcommand{\labsubtitle}{Drehpendel: Reglerentwurf inverses Drehpendel mit Hilfe der Wurzelortskurve}
 \renewcommand{\labauthor}{Gruppe für Regelungstechnik \& Advanced Control}
 \renewcommand{\labdate}{\today}
 
@@ -227,12 +230,12 @@ für Modellierung und Regelung arbeiten wir konsequent mit SI-Einheiten (\si{\ra
 
 \medskip
 \noindent
-\begin{minipage}[t]{0.42\linewidth}
+\begin{minipage}[t]{0.41\linewidth}
     \centering
     \includegraphics[width=.95\linewidth]{cuboid_foto_sm.jpg}\\
     \small Abbildung: Cuboid (Foto)
 \end{minipage}\hfill
-\begin{minipage}[t]{0.56\linewidth}
+\begin{minipage}[t]{0.55\linewidth}
     \centering
     \includegraphics[width=.98\linewidth]{EC90_datasheet.jpg}\\
     \small Abbildung: Ausschnitt aus dem EC90-Datenblatt

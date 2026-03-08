@@ -1,0 +1,163 @@
+% labslides.sty -- beamer slide style aligned with labstyle.sty
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{labslides}[2026/03/08 v1.4 Lab-aligned beamer slide style]
+
+% -----------------------------------------------------------------------------
+% Engine + fonts
+% -----------------------------------------------------------------------------
+\RequirePackage{iftex}
+\ifPDFTeX
+    \RequirePackage[T1]{fontenc}
+    \RequirePackage[utf8]{inputenc}
+    \RequirePackage{lmodern}
+\else
+    \RequirePackage{fontspec}
+    \setmainfont{TeX Gyre Pagella}
+    \setsansfont{TeX Gyre Heros}
+    \IfFontExistsTF{JetBrains Mono}
+    {\setmonofont{JetBrains Mono}}
+    {\setmonofont{TeX Gyre Cursor}}
+\fi
+
+% -----------------------------------------------------------------------------
+% Core packages
+% -----------------------------------------------------------------------------
+\RequirePackage{microtype}
+\RequirePackage{graphicx}
+\RequirePackage[dvipsnames]{xcolor}
+\RequirePackage{siunitx}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{booktabs}
+\RequirePackage{etoolbox}
+\RequirePackage{hyperref}
+
+\sisetup{
+    per-mode = symbol,
+    range-units = single
+}
+% -----------------------------------------------------------------------------
+% Paths / Colors
+% -----------------------------------------------------------------------------
+\graphicspath{{figures/}{Figures/}}
+\definecolor{labColor}{RGB}{0,100,166}
+
+% -----------------------------------------------------------------------------
+% Beamer look
+% -----------------------------------------------------------------------------
+\mode<presentation>{
+    \usetheme{default}
+    \usefonttheme{serif}
+    \setbeamertemplate{navigation symbols}{}
+}
+
+\hypersetup{colorlinks=true, linkcolor=NavyBlue, citecolor=RoyalBlue, urlcolor=RoyalBlue}
+\urlstyle{same}
+
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{structure}{fg=labColor}
+\setbeamercolor{alerted text}{fg=labColor}
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{subtitle}{fg=labColor}
+\setbeamercolor{frametitle}{fg=labColor,bg=white}
+\setbeamercolor{block title}{fg=labColor,bg=white}
+\setbeamercolor{block body}{fg=black,bg=white}
+\setbeamercolor{section title}{fg=labColor,bg=white}
+\setbeamercolor{headline text}{fg=labColor,bg=white}
+\setbeamercolor{footline text}{fg=white,bg=labColor}
+
+\setbeamerfont{title}{series=\bfseries,size=\LARGE}
+\setbeamerfont{subtitle}{series=\mdseries,size=\large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+
+% -----------------------------------------------------------------------------
+% Metadata (override in main .tex)
+% -----------------------------------------------------------------------------
+\newcommand{\labheader}{RT I}      % top-left text
+\newcommand{\labfooter}{ZHAW/IMS}  % bottom-left text
+\newcommand{\lablogo}{imslogo.pdf} % image filename for top-right (set empty to hide)
+\newcommand{\lablogoheight}{6.0ex} % logo height in header
+\newcommand{\lablogotoptrim}{50mm} % trim amount from top (trim = l b r t)
+\newcommand{\labheaderyshift}{3ex} % positive raises left header text
+
+% -----------------------------------------------------------------------------
+% Math helpers
+% -----------------------------------------------------------------------------
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\e}{\mathrm{e}}
+
+% -----------------------------------------------------------------------------
+% List defaults
+% -----------------------------------------------------------------------------
+% Match labstyle spacing as closely as Beamer permits.
+\addtobeamertemplate{itemize/enumerate body begin}{%
+    \setlength{\topsep}{2pt}%
+    \setlength{\itemsep}{5pt}%
+    \setlength{\parsep}{2pt}%
+    \setlength{\partopsep}{2pt}%
+}{}
+\addtobeamertemplate{itemize/enumerate subbody begin}{%
+    \setlength{\topsep}{2pt}%
+    \setlength{\itemsep}{3pt}%
+    \setlength{\parsep}{1pt}%
+    \setlength{\partopsep}{1pt}%
+}{}
+
+\setbeamertemplate{itemize item}{\color{labColor}$\bullet$}
+\setbeamertemplate{itemize subitem}{\color{labColor}$\bullet$}
+
+% -----------------------------------------------------------------------------
+% Header / Footer
+% -----------------------------------------------------------------------------
+\setbeamertemplate{headline}{%
+    \leavevmode
+    % Pull header upward and keep its footprint compact.
+    \vskip-0.8ex
+    \begin{beamercolorbox}[wd=\paperwidth,ht=7.56ex,dp=0.72ex,leftskip=1em,rightskip=1em]{headline text}
+        {\raisebox{\labheaderyshift}{\scriptsize\bfseries \labheader}}\hfill
+        \ifdefempty{\lablogo}{}{
+            \IfFileExists{\lablogo}{%
+                \includegraphics[height=\lablogoheight,trim=0 0 0 \lablogotoptrim,clip]{\lablogo}%
+            }{}%
+        }
+    \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}{%
+    \leavevmode
+    \begin{beamercolorbox}[wd=\paperwidth,ht=3.2ex,dp=1.2ex,leftskip=1em,rightskip=1em]{footline text}
+        {\scriptsize \labfooter}\hfill
+        \insertframenumber/\inserttotalframenumber
+    \end{beamercolorbox}
+}
+
+% -----------------------------------------------------------------------------
+% Title / Section pages
+% -----------------------------------------------------------------------------
+\setbeamertemplate{title page}{%
+    \vbox{}%
+    \vfill
+    {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
+    \vspace{0.6em}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+    \vspace{1.2em}
+    {\insertauthor\par}
+    {\insertinstitute\par}
+    \vspace{0.5em}
+    {\insertdate\par}
+    \vfill
+}
+
+\setbeamertemplate{section page}{%
+    \vfill
+    \begin{centering}
+        {\usebeamerfont{section title}\usebeamercolor[fg]{section title}\insertsection\par}
+    \end{centering}
+    \vfill
+}
+
+% Helper macro for a standalone section divider frame.
+\newcommand{\labsectionframe}{%
+    \begin{frame}[plain]
+        \sectionpage
+    \end{frame}
+}
