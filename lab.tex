@@ -1,16 +1,9 @@
 % lab.tex — example lab document that uses labstyle.sty
 \documentclass[a4paper,11pt]{scrartcl}
-\KOMAoptions{
-  parskip=half,
-  headings=small,
-  headinclude=true,
-  footinclude=true
-}
-\areaset{175mm}{290mm}
-% Shift the whole layout block (header + text + footer) down on the paper.
-% Positive value moves everything down; reduce if bottom margin gets too small.
-\addtolength{\topmargin}{0mm}
 
+% ------------------------------------------
+% Style package
+% ------------------------------------------
 \usepackage{labstyle}
 
 % ------------------------------------------
@@ -20,38 +13,11 @@
 % pdfLaTeX:
 \usepackage[ngerman]{babel}
 
-% LuaLaTeX / XeLaTeX:
-% \usepackage{polyglossia}
-% \setmainlanguage{german}
-
-% ------------------------------------------
-% Quotation handling
-% ------------------------------------------
-\usepackage{csquotes}
-
-% % ------------------------------------------
-% % Abstract: no side indent, no paragraph indent
-% % ------------------------------------------
-% \makeatletter
-% \renewenvironment{abstract}{%
-%   \small
-%   \parindent=0pt%
-%   \begin{center}\bfseries\abstractname\end{center}%
-%   \ignorespaces
-% }{\par}
-% \makeatother
-
-% ------------------------------------------
-% Custom Units
-% ------------------------------------------
-\DeclareSIUnit{\rpm}{rpm}
-\DeclareSIUnit{\newtonmeter}{\newton\metre}
-
 % ------------------------------------------
 % Metadata
 % ------------------------------------------
-\renewcommand{\labtitle}{Praktikum V}
-\renewcommand{\labsubtitle}{Drehpendel: Reglerentwurf inverses Drehpendel mit Hilfe der Wurzelortskurve}
+\renewcommand{\labtitle}{Praktikum V: Drehpendel}
+\renewcommand{\labsubtitle}{Reglerentwurf inverses Drehpendel mit Hilfe der Wurzelortskurve}
 \renewcommand{\labauthor}{Gruppe für Regelungstechnik \& Advanced Control}
 \renewcommand{\labdate}{\today}
 
@@ -295,8 +261,8 @@ Die Lösung eines exponentiellen Ansatzes:
 
 \subsection*{Links und Farben}
 Weitere Infos unter
-\href{https://www.maxongroup.com/}{\color{labColor}Maxon Motor AG}.
-Beachten Sie die Farbdefinition \texttt{labColor} aus \texttt{labstyle.sty}.
+\href{https://www.maxongroup.com/}{\color{blueColor}Maxon Motor AG}.
+Beachten Sie die Farbdefinition \texttt{blueColor} aus \texttt{labstyle.sty}.
 
 \section{Drehzahlregelung}
 Wir verwenden einen PI-Regler, Ziel: ausreichende Phasenreserve und keine Überschreitung von \qty{15}{A}.

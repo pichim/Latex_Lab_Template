@@ -1,15 +1,25 @@
-\documentclass[9pt]{beamer}
+% slides.tex — example slide deck that uses slidesstyle.sty
+\documentclass[8pt]{beamer}
 
-\usepackage{labslides}
+% ------------------------------------------
+% Style package
+% ------------------------------------------
+\usepackage{slidesstyle}
+
+% ------------------------------------------
+% Language support (choose ONE)
+% ------------------------------------------
+
+% pdfLaTeX:
 \usepackage[ngerman]{babel}
-\usepackage{csquotes}
-\usepackage{amsmath}
-\renewcommand{\lablogo}{imslogo.pdf}
 
+% ------------------------------------------
+% Metadata
+% ------------------------------------------
 \title[Praktikum V]{Praktikum V: Drehpendel}
 \subtitle{Reglerentwurf mit Root Locus}
 \author[RT I Team]{Gruppe fuer Regelungstechnik}
-\institute[ZHAW/IMS]{ZHAW \& IMS}
+\institute[ZHAW / IMS]{ZHAW \& IMS}
 \date{\today}
 
 \begin{document}
@@ -51,12 +61,12 @@
     \begin{block}{Drehpendel-Parameter}
         \begin{tabular}{ll}
             \toprule
-            Groesse & Wert \\
+            Groesse & Wert                                  \\
             \midrule
-            $L_1$ & \qty{0.0855}{\metre} \\
-            $m_2$ & \qty{0.028}{\kilogram} \\
-            $l_2$ & \qty{0.0805}{\metre} \\
-            $g$ & \qty{9.81}{\metre\per\second\squared} \\
+            $L_1$   & \qty{0.0855}{\metre}                  \\
+            $m_2$   & \qty{0.028}{\kilogram}                \\
+            $l_2$   & \qty{0.0805}{\metre}                  \\
+            $g$     & \qty{9.81}{\metre\per\second\squared} \\
             \bottomrule
         \end{tabular}
     \end{block}

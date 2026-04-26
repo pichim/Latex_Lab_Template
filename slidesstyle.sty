@@ -1,6 +1,27 @@
-% labslides.sty -- beamer slide style aligned with labstyle.sty
+% slidesstyle.sty -- beamer slide style aligned with labstyle.sty
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{labslides}[2026/03/08 v1.4 Lab-aligned beamer slide style]
+\ProvidesPackage{slidesstyle}[2026/04/25 v1.5 Lab-aligned beamer slide style]
+
+% -----------------------------------------------------------------------------
+% Alignment Notes (slidesstyle <-> labstyle)
+% -----------------------------------------------------------------------------
+% Shared customization hooks (same names in both files):
+%   \labtitlecolor, \labsubtitlecolor, \labheadingcolor, \lablistlabelcolor
+%   \lablinkcolor, \labcitecolor, \laburlcolor
+%   \labtextcolor, \labpagecolor
+%   \labheadlinefgcolor, \labheadlinebgcolor
+%   \labfootlinefgcolor, \labfootlinebgcolor
+%   \labblocktitlecolor, \labblockbodycolor, \labblockbgcolor
+%   \labheader, \labfooter, \lablogo, \lablogoheight, \lablogotoptrim
+%   \labheaderoffset, \labfootersize
+%
+% Slidesstyle-specific behavior:
+%   - no answerbox environments (labstyle-only)
+%   - headline/footline colors map directly to Beamer color boxes
+%
+% Class-level differences (expected):
+%   - slidesstyle uses Beamer templates and color themes
+%   - labstyle uses KOMA-Script page style and tcolorbox answer areas
 
 % -----------------------------------------------------------------------------
 % Engine + fonts
@@ -30,6 +51,13 @@
 \RequirePackage{booktabs}
 \RequirePackage{etoolbox}
 \RequirePackage{hyperref}
+\makeatletter
+\AtEndPreamble{%
+    \@ifpackageloaded{csquotes}{}{% load after babel/polyglossia when possible
+        \RequirePackage{csquotes}%
+    }%
+}
+\makeatother
 
 \sisetup{
     per-mode = symbol,
@@ -39,7 +67,31 @@
 % Paths / Colors
 % -----------------------------------------------------------------------------
 \graphicspath{{figures/}{Figures/}}
-\definecolor{labColor}{RGB}{0,100,166}
+\definecolor{blueColor}{RGB}{0,100,166}
+\definecolor{greyColor}{RGB}{90, 90, 90}
+\definecolor{orangeColor}{RGB}{225, 85, 0}
+\definecolor{blackColor}{RGB}{0, 0, 0}
+\definecolor{whiteColor}{RGB}{255, 255, 255}
+
+% Semantic color hooks (override in main .tex via \renewcommand).
+% Shared names with labstyle.sty are kept intentionally.
+\newcommand{\labtitlecolor}{blueColor}
+\newcommand{\labsubtitlecolor}{blueColor}
+\newcommand{\labheadingcolor}{blueColor}
+\newcommand{\lablistlabelcolor}{blueColor}
+\newcommand{\lablinkcolor}{NavyBlue}
+\newcommand{\labcitecolor}{RoyalBlue}
+\newcommand{\laburlcolor}{RoyalBlue}
+
+\newcommand{\labtextcolor}{blackColor}
+\newcommand{\labpagecolor}{whiteColor}
+\newcommand{\labheadlinefgcolor}{blackColor}
+\newcommand{\labheadlinebgcolor}{whiteColor}
+\newcommand{\labfootlinefgcolor}{whiteColor}
+\newcommand{\labfootlinebgcolor}{greyColor}
+\newcommand{\labblocktitlecolor}{blueColor}
+\newcommand{\labblockbodycolor}{blackColor}
+\newcommand{\labblockbgcolor}{whiteColor}
 
 % -----------------------------------------------------------------------------
 % Beamer look
@@ -50,34 +102,49 @@
     \setbeamertemplate{navigation symbols}{}
 }
 
-\hypersetup{colorlinks=true, linkcolor=NavyBlue, citecolor=RoyalBlue, urlcolor=RoyalBlue}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=\lablinkcolor,
+    citecolor=\labcitecolor,
+    urlcolor=\laburlcolor
+}
 \urlstyle{same}
 
-\setbeamercolor{normal text}{fg=black,bg=white}
-\setbeamercolor{structure}{fg=labColor}
-\setbeamercolor{alerted text}{fg=labColor}
-\setbeamercolor{title}{fg=black}
-\setbeamercolor{subtitle}{fg=labColor}
-\setbeamercolor{frametitle}{fg=labColor,bg=white}
-\setbeamercolor{block title}{fg=labColor,bg=white}
-\setbeamercolor{block body}{fg=black,bg=white}
-\setbeamercolor{section title}{fg=labColor,bg=white}
-\setbeamercolor{headline text}{fg=labColor,bg=white}
-\setbeamercolor{footline text}{fg=white,bg=labColor}
+\setbeamercolor{normal text}{fg=\labtextcolor,bg=\labpagecolor}
+\setbeamercolor{structure}{fg=\labheadingcolor}
+\setbeamercolor{alerted text}{fg=\labheadingcolor}
+\setbeamercolor{title}{fg=\labtitlecolor}
+\setbeamercolor{subtitle}{fg=\labsubtitlecolor}
+\setbeamercolor{frametitle}{fg=\labheadingcolor,bg=\labpagecolor}
+\setbeamercolor{block title}{fg=\labblocktitlecolor,bg=\labblockbgcolor}
+\setbeamercolor{block body}{fg=\labblockbodycolor,bg=\labblockbgcolor}
+\setbeamercolor{section title}{fg=\labheadingcolor,bg=\labpagecolor}
+\setbeamercolor{headline text}{fg=\labheadlinefgcolor,bg=\labheadlinebgcolor}
+\setbeamercolor{footline text}{fg=\labfootlinefgcolor,bg=\labfootlinebgcolor}
 
 \setbeamerfont{title}{series=\bfseries,size=\LARGE}
 \setbeamerfont{subtitle}{series=\mdseries,size=\large}
 \setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{normal text}{size=\normalsize}
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{institute}{size=\normalsize}
+\setbeamerfont{date}{size=\normalsize}
+\setbeamerfont{itemize/enumerate body}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subbody}{size=\small}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\footnotesize}
+\setbeamerfont{block title}{size=\normalsize}
+\setbeamerfont{block body}{size=\normalsize}
 
 % -----------------------------------------------------------------------------
 % Metadata (override in main .tex)
 % -----------------------------------------------------------------------------
 \newcommand{\labheader}{RT I}      % top-left text
-\newcommand{\labfooter}{ZHAW/IMS}  % bottom-left text
+\newcommand{\labfooter}{ZHAW / IMS}  % bottom-left text
 \newcommand{\lablogo}{imslogo.pdf} % image filename for top-right (set empty to hide)
-\newcommand{\lablogoheight}{6.0ex} % logo height in header
+\newcommand{\lablogoheight}{5.0ex} % logo height in header
 \newcommand{\lablogotoptrim}{50mm} % trim amount from top (trim = l b r t)
-\newcommand{\labheaderyshift}{3ex} % positive raises left header text
+\newcommand{\labheaderoffset}{3ex} % positive raises left header text
+\newcommand{\labfootersize}{\footnotesize}
 
 % -----------------------------------------------------------------------------
 % Math helpers
@@ -89,21 +156,11 @@
 % List defaults
 % -----------------------------------------------------------------------------
 % Match labstyle spacing as closely as Beamer permits.
-\addtobeamertemplate{itemize/enumerate body begin}{%
-    \setlength{\topsep}{2pt}%
-    \setlength{\itemsep}{5pt}%
-    \setlength{\parsep}{2pt}%
-    \setlength{\partopsep}{2pt}%
-}{}
-\addtobeamertemplate{itemize/enumerate subbody begin}{%
-    \setlength{\topsep}{2pt}%
-    \setlength{\itemsep}{3pt}%
-    \setlength{\parsep}{1pt}%
-    \setlength{\partopsep}{1pt}%
-}{}
-
-\setbeamertemplate{itemize item}{\color{labColor}$\bullet$}
-\setbeamertemplate{itemize subitem}{\color{labColor}$\bullet$}
+\setbeamertemplate{itemize item}{\color{\lablistlabelcolor}$\bullet$}
+\setbeamertemplate{itemize subitem}{\color{\lablistlabelcolor}$\bullet$}
+\setbeamertemplate{enumerate item}{\color{\lablistlabelcolor}\insertenumlabel.}
+\setbeamertemplate{enumerate subitem}{\color{\lablistlabelcolor}\insertsubenumlabel.}
+\setbeamertemplate{enumerate subsubitem}{\color{\lablistlabelcolor}\insertsubsubenumlabel.}
 
 % -----------------------------------------------------------------------------
 % Header / Footer
@@ -113,7 +170,7 @@
     % Pull header upward and keep its footprint compact.
     \vskip-0.8ex
     \begin{beamercolorbox}[wd=\paperwidth,ht=7.56ex,dp=0.72ex,leftskip=1em,rightskip=1em]{headline text}
-        {\raisebox{\labheaderyshift}{\scriptsize\bfseries \labheader}}\hfill
+        {\raisebox{\labheaderoffset}{\scriptsize\bfseries \labheader}}\hfill
         \ifdefempty{\lablogo}{}{
             \IfFileExists{\lablogo}{%
                 \includegraphics[height=\lablogoheight,trim=0 0 0 \lablogotoptrim,clip]{\lablogo}%
@@ -125,7 +182,7 @@
 \setbeamertemplate{footline}{%
     \leavevmode
     \begin{beamercolorbox}[wd=\paperwidth,ht=3.2ex,dp=1.2ex,leftskip=1em,rightskip=1em]{footline text}
-        {\scriptsize \labfooter}\hfill
+        {\labfootersize \labfooter}\hfill
         \insertframenumber/\inserttotalframenumber
     \end{beamercolorbox}
 }

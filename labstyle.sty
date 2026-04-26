@@ -3,6 +3,26 @@
 \ProvidesPackage{labstyle}[2026/03/08 v1.6 Lab handout style]
 
 % -----------------------------------------------------------------------------
+% Alignment Notes (labstyle <-> slidesstyle)
+% -----------------------------------------------------------------------------
+% Shared customization hooks (same names in both files):
+%   \labtitlecolor, \labsubtitlecolor, \labheadingcolor, \lablistlabelcolor
+%   \lablinkcolor, \labcitecolor, \laburlcolor
+%   \labtextcolor, \labpagecolor
+%   \labheadlinefgcolor
+%   \labfootlinefgcolor
+%   \labblocktitlecolor, \labblockbodycolor, \labblockbgcolor
+%   \labheader, \labfooter, \lablogo, \lablogoheight, \lablogotoptrim
+%   \labheaderoffset, \labfootersize
+%
+% Labstyle-specific hook:
+%   \labboxframecolor (answer box frame)
+%
+% Class-level differences (expected):
+%   - labstyle uses KOMA-Script page style (no colored headline/footline bar box)
+%   - slidesstyle uses Beamer color boxes for headline/footline areas
+
+% -----------------------------------------------------------------------------
 % Engine + fonts
 % -----------------------------------------------------------------------------
 \RequirePackage{iftex}
@@ -35,26 +55,86 @@
 \RequirePackage{amsmath,amssymb}
 \RequirePackage{booktabs}
 \RequirePackage{enumitem}
-\setlist[itemize,enumerate]{
-    topsep=2pt,
-    itemsep=5pt,
-    parsep=2pt,
-    partopsep=2pt,
-    leftmargin=*
-}
 
 \RequirePackage{hyperref}
-\hypersetup{colorlinks=true, linkcolor=NavyBlue, citecolor=RoyalBlue, urlcolor=RoyalBlue}
 \urlstyle{same}
 \RequirePackage[nameinlink,capitalise]{cleveref}
 \RequirePackage{etoolbox} % for \ifdefempty
+\makeatletter
+\AtEndPreamble{%
+    \@ifpackageloaded{csquotes}{}{% load after babel/polyglossia when possible
+        \RequirePackage{csquotes}%
+    }%
+}
+\makeatother
 
 % -----------------------------------------------------------------------------
 % Paths / Colors
 % -----------------------------------------------------------------------------
 \graphicspath{{figures/}{Figures/}}
-\definecolor{labColor}{RGB}{0,100,166}
-\definecolor{boxColor}{RGB}{0,0,0}
+\definecolor{blueColor}{RGB}{0,100,166}
+\definecolor{greyColor}{RGB}{90, 90, 90}
+\definecolor{orangeColor}{RGB}{225, 85, 0}
+\definecolor{blackColor}{RGB}{0, 0, 0}
+\definecolor{whiteColor}{RGB}{255, 255, 255}
+
+% Semantic color hooks (override in main .tex via \renewcommand).
+\newcommand{\labtitlecolor}{blueColor}
+\newcommand{\labsubtitlecolor}{blueColor}
+\newcommand{\labheadingcolor}{blueColor}
+\newcommand{\lablistlabelcolor}{blueColor}
+\newcommand{\lablinkcolor}{NavyBlue}
+\newcommand{\labcitecolor}{RoyalBlue}
+\newcommand{\laburlcolor}{RoyalBlue}
+\newcommand{\labtextcolor}{blackColor}
+\newcommand{\labpagecolor}{whiteColor}
+\newcommand{\labheadlinefgcolor}{blackColor}
+\newcommand{\labfootlinefgcolor}{blackColor}
+\newcommand{\labblocktitlecolor}{blueColor}
+\newcommand{\labblockbodycolor}{blackColor}
+\newcommand{\labblockbgcolor}{whiteColor}
+\newcommand{\labboxframecolor}{greyColor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=\lablinkcolor,
+    citecolor=\labcitecolor,
+    urlcolor=\laburlcolor
+}
+
+% List styling and spacing hooks.
+% Defaults for the lab handout list spacing.
+% Examples (put these in lab.tex preamble when customizing):
+% \setlabitemizespacing{topsep=2pt,itemsep=4pt,parsep=1pt,partopsep=1pt}
+% \setlabenumeratespacing{topsep=2pt,itemsep=4pt,parsep=1pt,partopsep=1pt}
+\newcommand{\setlabitemizespacing}[1]{%
+    \ifstrempty{#1}{%
+        \setlist[itemize]{label=\textbullet,font=\color{\lablistlabelcolor}}%
+    }{%
+        \setlist[itemize]{label=\textbullet,font=\color{\lablistlabelcolor},#1}%
+    }%
+}
+\newcommand{\setlabenumeratespacing}[1]{%
+    \ifstrempty{#1}{%
+        \setlist[enumerate]{font=\color{\lablistlabelcolor}}%
+    }{%
+        \setlist[enumerate]{font=\color{\lablistlabelcolor},#1}%
+    }%
+}
+% \setlabitemizespacing{}
+% \setlabenumeratespacing{}
+\setlabitemizespacing{topsep=2pt,itemsep=2pt,parsep=1pt,partopsep=1pt}
+\setlabenumeratespacing{topsep=2pt,itemsep=2pt,parsep=1pt,partopsep=1pt}
+
+% Color sectioning commands for KOMA classes (e.g. scrartcl).
+\makeatletter
+\@ifundefined{addtokomafont}{}{\addtokomafont{disposition}{\color{\labheadingcolor}}}
+\makeatother
+
+\AtBeginDocument{%
+    \pagecolor{\labpagecolor}%
+    \color{\labtextcolor}%
+}
 
 % -----------------------------------------------------------------------------
 % Metadata (override in main .tex)
@@ -65,17 +145,41 @@
 \newcommand{\labdate}{\today}
 
 % -----------------------------------------------------------------------------
+% Document layout defaults (override in main .tex if needed)
+% -----------------------------------------------------------------------------
+\newcommand{\labtopmarginadjust}{-2mm}
+
+\makeatletter
+\@ifundefined{KOMAoptions}{}{%
+    \KOMAoptions{%
+        parskip=half,
+        headings=small,
+        headinclude=true,
+        footinclude=true
+    }%
+}
+\@ifundefined{areaset}{}{%
+    \areaset{175mm}{290mm}%
+}
+\makeatother
+\AtBeginDocument{\addtolength{\topmargin}{\labtopmarginadjust}}
+
+% Custom units shared across lab sheets.
+\DeclareSIUnit{\rpm}{rpm}
+\DeclareSIUnit{\newtonmeter}{\newton\metre}
+
+% -----------------------------------------------------------------------------
 % Title block
 % -----------------------------------------------------------------------------
 \makeatletter
 \newcommand{\makelabtitle}{%
-    \par\vspace*{1em}%
-    {\LARGE\bfseries \labtitle\par}%
+    \par\vspace*{0em}%
+    {\LARGE\bfseries\color{\labtitlecolor} \labtitle\par}%
     \ifdefempty{\labsubtitle}{}{%
-        {\Large\color{labColor}\labsubtitle\par}%
+        {\Large\color{\labsubtitlecolor}\labsubtitle\par}%
     }%
     {\large \labauthor\quad\textendash\quad \labdate\par}
-    \vspace{1em}\par
+    \vspace{0em}\par
 }
 \makeatother
 
@@ -84,8 +188,9 @@
 % -----------------------------------------------------------------------------
 \newenvironment{aufgaben}[1][Aufgaben]{%
     \par\smallskip
-    \begingroup\color{labColor}%
-    \noindent\textbf{#1}\par\smallskip
+    \begingroup
+    \noindent\textbf{\color{\labblocktitlecolor}#1}\par\smallskip
+    \color{\labblockbodycolor}
     \begin{enumerate}[leftmargin=*]
         }{%
     \end{enumerate}%
@@ -147,7 +252,7 @@
 % Header / Footer metadata (override in main .tex)
 % -----------------------------------------------------------------------------
 \newcommand{\labheader}{RT I}         % top-left text
-\newcommand{\labfooter}{ZHAW/IMS}     % bottom-left text
+\newcommand{\labfooter}{ZHAW / IMS}     % bottom-left text
 \newcommand{\lablogo}{imslogo.pdf}    % small image filename for top-right (optional)
 \newcommand{\lablogoheight}{5.0ex}    % logo height in header
 \newcommand{\lablogotoptrim}{50mm}    % trim amount from top (trim = l b r t)
@@ -158,14 +263,14 @@
 \setlength{\footskip}{\labfootskip}
 
 \makeatletter
-\ihead{\small\raisebox{\labheaderoffset}{\labheader}}
+\ihead{\small\color{\labheadlinefgcolor}\raisebox{\labheaderoffset}{\labheader}}
 \ohead{%
     \ifdefempty{\lablogo}{}{%
         \IfFileExists{\lablogo}{\includegraphics[height=\lablogoheight,trim=0 0 0 \lablogotoptrim,clip]{\lablogo}}{}%
     }%
 }
-\ifoot{{\labfootersize \labfooter}}
-\ofoot{{\labfootersize \pagemark}}
+\ifoot{{\labfootersize\color{\labfootlinefgcolor} \labfooter}}
+\ofoot{{\labfootersize\color{\labfootlinefgcolor} \pagemark}}
 \makeatother
 
 % -----------------------------------------------------------------------------
@@ -176,8 +281,8 @@
 
 \tcbset{
     labbox/.style={
-            colframe=boxColor,
-            colback=white,
+            colframe=\labboxframecolor,
+            colback=\labblockbgcolor,
             boxrule=0.8pt,
             arc=2pt,
             left=6pt,right=6pt,top=4pt,bottom=4pt,
